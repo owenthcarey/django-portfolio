@@ -1,0 +1,5 @@
+/* This is a simple example. You may want to extend this for a full dark theme. */
+body.dark-mode {
+  background-color: #242424;
+  color: white;
+}
