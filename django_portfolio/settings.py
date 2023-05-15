@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
+    "blogs.apps.BlogsConfig",
     "home.apps.HomeConfig",
     "polls.apps.PollsConfig",
     "django.contrib.admin",
