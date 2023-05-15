@@ -1,7 +1,12 @@
 {% extends "base_generic.html" %}
-
 {% block content %}
-  <div class="alert alert-primary" role="alert">
-    This is a primary alert—check it out!
-  </div>
+  {% if latest_blog_list %}
+    <ul>
+      {% for blog in latest_blog_list %}
+        <li><a href="{% url 'blogs:detail' blog.id %}">{{ blog.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No blogs are available.</p>
+  {% endif %}
 {% endblock %}

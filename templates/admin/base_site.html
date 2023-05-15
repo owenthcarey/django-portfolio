@@ -4,7 +4,7 @@
   {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-  <h1 id="site-name"><a href="{% url 'admin:index' %}">Django Portfolio Administration</a></h1>
+  <h1 id="site-name"><a href="{% url 'admin:index' %}">Owen’s Portfolio Administration</a></h1>
   {% if user.is_anonymous %}
     {% include "admin/color_theme_toggle.html" %}
   {% endif %}
