@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "blogs.apps.BlogsConfig",
     "home.apps.HomeConfig",
+    "image_gen.apps.ImageGenConfig",
     "polls.apps.PollsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
