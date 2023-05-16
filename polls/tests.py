@@ -34,7 +34,7 @@ class QuestionModelTests(TestCase):
         self.assertIs(recent_question.was_published_recently(), True)
 
 
-def create_question(question_text, days):
+def create_question(question_text: str, days: int) -> Question:
     """
     Create a question with the given `question_text` and published the
     given number of `days` offset to now (negative for questions published

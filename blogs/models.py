@@ -10,7 +10,7 @@ class Blog(models.Model):
     pub_date = models.DateTimeField("date published")
     content = models.TextField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
     @admin.display(
@@ -18,6 +18,6 @@ class Blog(models.Model):
         ordering="pub_date",
         description="Published recently?",
     )
-    def was_published_recently(self):
+    def was_published_recently(self) -> bool:
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
