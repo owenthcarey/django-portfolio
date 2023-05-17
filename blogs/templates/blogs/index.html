@@ -3,7 +3,7 @@
   {% if latest_blog_list %}
     <ul>
       {% for blog in latest_blog_list %}
-        <li><a href="{% url 'blogs:detail' blog.id %}">{{ blog.title }}</a></li>
+        <li><a href="{% url 'blogs:detail' blog.id %}">{{ blog.title }}</a> by {{ blog.author.username }}</li>
       {% endfor %}
     </ul>
   {% else %}
