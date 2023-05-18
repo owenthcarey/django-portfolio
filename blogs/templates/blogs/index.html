@@ -3,7 +3,17 @@
   {% if latest_blog_list %}
     <ul>
       {% for blog in latest_blog_list %}
-        <li><a href="{% url 'blogs:detail' blog.id %}">{{ blog.title }}</a> by {{ blog.author.username }}</li>
+        <a href="{% url 'blogs:detail' blog.id %}" class="text-decoration-none text-reset d-inline-block">
+          <div class="card" style="width: 18rem;">
+            {% if blog.image %}
+              <img src="{{ blog.image.url }}" class="card-img-top" alt="Image for {{ blog.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ blog.title }}</h5>
+              <p class="card-text">By {{ blog.author.username }}</p>
+            </div>
+          </div>
+        </a>
       {% endfor %}
     </ul>
   {% else %}
