@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  {% if latest_photo_list %}
+    <ul>
+      {% for photo in latest_photo_list %}
+        <a href="{% url 'photos:detail' photo.id %}" class="text-decoration-none text-reset d-inline-block">
+          <div class="card" style="width: 18rem;">
+            {% if photo.image %}
+              <img src="{{ photo.image.url }}" class="card-img-top" alt="Image for {{ photo.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ photo.title }}</h5>
+              <p class="card-text">By {{ photo.author.username }}</p>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No photos are available.</p>
+  {% endif %}
+{% endblock %}
