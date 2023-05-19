@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "home.apps.HomeConfig",
     "image_gen.apps.ImageGenConfig",
     "polls.apps.PollsConfig",
+    # "channels",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -131,3 +133,13 @@ LOGIN_URL = "/accounts/login/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+# Channels
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
+ASGI_APPLICATION = "django_portfolio.routing.application"

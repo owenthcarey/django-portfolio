@@ -1,9 +1,83 @@
 {% extends "base_generic.html" %}
 {% block content %}
-  <form method="post">
+  <form id="generate-form" method="post">
     {% csrf_token %}
     <label for="prompt">Enter your prompt:</label><br>
     <input type="text" id="prompt" name="prompt"><br>
-    <input type="submit" value="Generate Image">
+    <button type="button" id="generate-btn">Generate Image</button>
   </form>
+  <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="0" aria-valuemin="0"
+       aria-valuemax="100">
+    <div class="progress-bar" style="width: 0%">0%</div>
+  </div>
+  <img id="gen-image" src="" alt="Generated Image" style="display: none;">
+{% endblock %}
+
+{% block extrascripts %}
+  <script>
+    let socket = null;
+
+    // Function to handle form submit
+    const handleFormSubmit = function (e) {
+      // Preventing the form from being submitted normally
+      e.preventDefault();
+
+      // Sending the input value to the server through the WebSocket
+      socket.send(JSON.stringify({
+        'prompt': document.querySelector('#prompt').value
+      }));
+    };
+
+    // Attaching event listener to the "Generate Image" button
+    document.getElementById('generate-btn').addEventListener('click', function () {
+      // If socket is open, close it before opening a new one
+      if (socket !== null && socket.readyState !== WebSocket.CLOSED) {
+        socket.close();
+      }
+
+      // Creating a new WebSocket connection when the button is clicked
+      socket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/image_gen/'
+      );
+
+      // Function to handle incoming messages from the server through the WebSocket
+      socket.onmessage = function (e) {
+        // Parsing the data from the server
+        const data = JSON.parse(e.data);
+
+        // Updating the progress bar with the progress received from the server
+        const progressBar = document.querySelector('.progress-bar');
+        progressBar.style.width = data.progress + '%';
+        progressBar.textContent = data.progress + '%';
+
+        // Updating the source of the image element with the image data received from the server
+        document.getElementById('gen-image').src = 'data:image/png;base64,' + data.image;
+
+        // Displaying the image element once the progress reaches 100
+        if (data.progress >= 100) {
+          document.getElementById('gen-image').style.display = 'block';
+        }
+      };
+
+      // Function to handle the opening of the WebSocket connection
+      socket.onopen = function (e) {
+        // Getting the form and removing old event listener
+        const form = document.querySelector('#generate-form');
+        form.removeEventListener('submit', handleFormSubmit);
+
+        // Attaching new event listener to the form submit event
+        form.addEventListener('submit', handleFormSubmit);
+
+        // Creating a new submit event and dispatching it on the form
+        const event = new Event('submit');
+        form.dispatchEvent(event);
+      };
+
+      // Function to handle the closing of the WebSocket connection
+      socket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+      };
+    });
+  </script>
 {% endblock %}
