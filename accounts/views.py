@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from blogs.models import Blog
+from photos.models import Photo
+
 
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
@@ -25,4 +28,7 @@ def register(request: HttpRequest) -> HttpResponse:
 
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
-    return render(request, "accounts/user_profile.html", {"profile_user": user})
+    user_blogs = Blog.objects.filter(author=user)
+    user_photos = Photo.objects.filter(author=user)
+    context = {"profile_user": user, "user_blogs": user_blogs, "user_photos": user_photos}
+    return render(request, "accounts/user_profile.html", context)

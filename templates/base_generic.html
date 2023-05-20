@@ -25,6 +25,7 @@
         <div class="navbar-nav">
           <a class="nav-link active" aria-current="page" href="{% url 'home:index' %}">Home</a>
           <a class="nav-link" href="{% url 'blogs:index' %}">Blogs</a>
+          <a class="nav-link" href="{% url 'photos:index' %}">Photos</a>
           {% if user.is_authenticated %}
             <span class="nav-link">Welcome, {{ user.username }}</span>
             <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
