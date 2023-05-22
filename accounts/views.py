@@ -30,5 +30,9 @@ def user_profile(request, username):
     user = get_object_or_404(User, username=username)
     user_blogs = Blog.objects.filter(author=user)
     user_photos = Photo.objects.filter(author=user)
-    context = {"profile_user": user, "user_blogs": user_blogs, "user_photos": user_photos}
+    context = {
+        "profile_user": user,
+        "user_blogs": user_blogs,
+        "user_photos": user_photos,
+    }
     return render(request, "accounts/user_profile.html", context)

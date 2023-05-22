@@ -7,4 +7,13 @@
   {% if blog.image %}
     <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
   {% endif %}
+  <p>Total likes: {{ blog.total_likes }}</p>
+  <form action="{% url 'blogs:like_blog' blog.id %}" method="post">
+    {% csrf_token %}
+    {% if user_likes %}
+      <button type="submit">Unlike</button>
+    {% else %}
+      <button type="submit">Like</button>
+    {% endif %}
+  </form>
 {% endblock %}

@@ -23,3 +23,14 @@ class Blog(models.Model):
     def was_published_recently(self) -> bool:
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
+
+    def total_likes(self) -> int:
+        return self.like_set.count()
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "blog")

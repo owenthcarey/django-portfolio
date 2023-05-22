@@ -22,7 +22,9 @@ class ImageGenConsumer(AsyncWebsocketConsumer):
             text_data: The text data sent from the client side.
         """
         print("Received data: ", text_data)
-        text_data_json: dict = json.loads(text_data)  # Parsing the JSON data from the client
+        text_data_json: dict = json.loads(
+            text_data
+        )  # Parsing the JSON data from the client
         prompt: str = text_data_json["prompt"]
         print("Prompt: ", prompt)
 
