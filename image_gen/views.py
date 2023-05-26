@@ -25,7 +25,7 @@ def generate_image(request: HttpRequest) -> HttpResponse:
 
 
 def generate_app_icon(request: HttpRequest) -> FileResponse:
-    # Step 1: Get the user's input.
+    # Get the user's input.
     color = request.GET.get("color", "#000000")
     prompt = request.GET.get("prompt", "Default Prompt")
 
@@ -33,29 +33,53 @@ def generate_app_icon(request: HttpRequest) -> FileResponse:
     temp_dir = "temp"
     os.makedirs(temp_dir, exist_ok=True)
 
-    # Step 2: Generate the app icon.
+    # Generate the app icon.
     base_size = 1024
-    square_size = base_size // 2
-    square_start = base_size // 4
-    img = Image.new("RGB", (base_size, base_size), color=color)
-    draw = ImageDraw.Draw(img)
-    draw.rectangle(
+    ios_square_size = base_size * 0.8  # 80% of the base_size
+    android_square_size = base_size * 0.70  # 70% of the base_size
+
+    ios_square_start = (base_size - ios_square_size) // 2
+    android_square_start = (base_size - android_square_size) // 2
+
+    # Generate the iOS app icon.
+    ios_img = Image.new("RGB", (base_size, base_size), color=color)
+    draw_ios = ImageDraw.Draw(ios_img)
+    draw_ios.rectangle(
         [
-            square_start,
-            square_start,
-            square_start + square_size,
-            square_start + square_size,
+            ios_square_start,
+            ios_square_start,
+            ios_square_start + ios_square_size,
+            ios_square_start + ios_square_size,
         ],
         fill="white",
     )
 
-    # Step 3: Resize the icon and save all the sizes.
-    ios_sizes = [20, 29, 40, 58, 60, 76, 80, 87, 120, 152, 167, 180, 1024]
-    for size in ios_sizes:
-        resized_img = img.resize((size, size))
-        resized_img.save(f"{temp_dir}/{prompt}_{size}.png")
+    # Generate the Android app icon.
+    android_img = Image.new("RGB", (base_size, base_size), color=color)
+    draw_android = ImageDraw.Draw(android_img)
+    draw_android.rectangle(
+        [
+            android_square_start,
+            android_square_start,
+            android_square_start + android_square_size,
+            android_square_start + android_square_size,
+        ],
+        fill="white",
+    )
 
-    # Step 4: Compile the icons into a ZIP file.
+    # Resize the app icons and save all the sizes.
+    ios_sizes = [20, 29, 40, 58, 60, 76, 80, 87, 120, 152, 167, 180, 1024]
+    android_sizes = [48, 72, 96, 144, 192, 512]
+
+    for size in ios_sizes:
+        resized_img = ios_img.resize((size, size))
+        resized_img.save(f"{temp_dir}/iOS_{prompt}_{size}.png")
+
+    for size in android_sizes:
+        resized_img = android_img.resize((size, size))
+        resized_img.save(f"{temp_dir}/Android_{prompt}_{size}.png")
+
+    # Compile the app icons into a ZIP file.
     zip_filename = f"{prompt}_app_icons.zip"
     zipf = zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(temp_dir):
@@ -63,12 +87,12 @@ def generate_app_icon(request: HttpRequest) -> FileResponse:
             zipf.write(os.path.join(root, file))
     zipf.close()
 
-    # Step 5: Provide the ZIP file for download.
+    # Provide the ZIP file for download.
     response = FileResponse(open(zip_filename, "rb"))
     response["Content-Type"] = "application/zip"
     response["Content-Disposition"] = f"attachment; filename={zip_filename}"
 
-    # Delete temp files and directory
+    # Delete the temp files and directory.
     for file in os.listdir(temp_dir):
         os.remove(f"{temp_dir}/{file}")
     os.rmdir(temp_dir)
