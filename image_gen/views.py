@@ -8,6 +8,7 @@ import zipfile
 from django.http import FileResponse, HttpRequest, HttpResponse
 from django.shortcuts import render
 import keras_cv
+import math
 
 
 def generate_image(request: HttpRequest) -> HttpResponse:
@@ -22,6 +23,24 @@ def generate_image(request: HttpRequest) -> HttpResponse:
             img_str = base64.b64encode(buffer.getvalue()).decode()
             return render(request, "image_gen/display_image.html", {"image": img_str})
     return render(request, "image_gen/input_prompt.html")
+
+
+def draw_star(draw, start, size, points=10, fill="white"):
+    degrees_per_point = 360 / points
+    rad_per_deg = math.pi / 180
+    radius_outer = size // 2
+    radius_inner = radius_outer // 2
+
+    points_outer = [(start + size // 2 + radius_outer * math.cos(rad_per_deg * (i * degrees_per_point)),
+                     start + size // 2 + radius_outer * math.sin(rad_per_deg * (i * degrees_per_point)))
+                    for i in range(points)]
+
+    points_inner = [(start + size // 2 + radius_inner * math.cos(rad_per_deg * ((i + 0.5) * degrees_per_point)),
+                     start + size // 2 + radius_inner * math.sin(rad_per_deg * ((i + 0.5) * degrees_per_point)))
+                    for i in range(points)]
+
+    star_points = [val for pair in zip(points_outer, points_inner) for val in pair]
+    draw.polygon(star_points, fill=fill)
 
 
 def generate_app_icon(request: HttpRequest) -> FileResponse:
@@ -41,31 +60,41 @@ def generate_app_icon(request: HttpRequest) -> FileResponse:
     ios_square_start = (base_size - ios_square_size) // 2
     android_square_start = (base_size - android_square_size) // 2
 
+    # # Generate the iOS app icon.
+    # ios_img = Image.new("RGB", (base_size, base_size), color=color)
+    # draw_ios = ImageDraw.Draw(ios_img)
+    # draw_ios.rectangle(
+    #     [
+    #         ios_square_start,
+    #         ios_square_start,
+    #         ios_square_start + ios_square_size,
+    #         ios_square_start + ios_square_size,
+    #     ],
+    #     fill="white",
+    # )
+    #
+    # # Generate the Android app icon.
+    # android_img = Image.new("RGB", (base_size, base_size), color=color)
+    # draw_android = ImageDraw.Draw(android_img)
+    # draw_android.rectangle(
+    #     [
+    #         android_square_start,
+    #         android_square_start,
+    #         android_square_start + android_square_size,
+    #         android_square_start + android_square_size,
+    #     ],
+    #     fill="white",
+    # )
+
     # Generate the iOS app icon.
     ios_img = Image.new("RGB", (base_size, base_size), color=color)
     draw_ios = ImageDraw.Draw(ios_img)
-    draw_ios.rectangle(
-        [
-            ios_square_start,
-            ios_square_start,
-            ios_square_start + ios_square_size,
-            ios_square_start + ios_square_size,
-        ],
-        fill="white",
-    )
+    draw_star(draw_ios, ios_square_start, ios_square_size)
 
     # Generate the Android app icon.
     android_img = Image.new("RGB", (base_size, base_size), color=color)
     draw_android = ImageDraw.Draw(android_img)
-    draw_android.rectangle(
-        [
-            android_square_start,
-            android_square_start,
-            android_square_start + android_square_size,
-            android_square_start + android_square_size,
-        ],
-        fill="white",
-    )
+    draw_star(draw_android, android_square_start, android_square_size)
 
     # Resize the app icons and save all the sizes.
     ios_sizes = [20, 29, 40, 58, 60, 76, 80, 87, 120, 152, 167, 180, 1024]
