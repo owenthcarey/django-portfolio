@@ -1,9 +1,55 @@
 {% extends "base_generic.html" %}
 {% block content %}
-  <h1>Welcome to My Django Portfolio</h1>
-  <p>This is the home page of my Django project.</p>
-  <div class="alert alert-primary" role="alert">
-    This is a primary alert—check it out!
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-4 fw-bolder">Welcome to My Django Portfolio</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Quickly design and customize responsive mobile-first
+        sites with Bootstrap, the world’s most popular front-end open source
+        toolkit, featuring Sass variables and mixins, responsive grid system,
+        extensive prebuilt components, and powerful JavaScript plugins.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+        <a href="#" class="btn btn-primary btn-lg px-4 me-sm-3">Learn more</a>
+      </div>
+    </div>
   </div>
-  <button type="button" class="btn btn-primary">Primary</button>
+  <div class="container py-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <div class="card">
+          <img src="https://source.unsplash.com/450x300/?nature&random=1"
+               class="card-img-top" alt="About me">
+          <div class="card-body">
+            <h5 class="card-title">About Me</h5>
+            <p class="card-text">Some quick example text to build on the card
+              title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <img src="https://source.unsplash.com/450x300/?nature&random=2"
+               class="card-img-top" alt="My Skills">
+          <div class="card-body">
+            <h5 class="card-title">My Skills</h5>
+            <p class="card-text">Some quick example text to build on the card
+              title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <img src="https://source.unsplash.com/450x300/?nature&random=3"
+               class="card-img-top" alt="My Projects">
+          <div class="card-body">
+            <h5 class="card-title">My Projects</h5>
+            <p class="card-text">Some quick example text to build on the card
+              title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
